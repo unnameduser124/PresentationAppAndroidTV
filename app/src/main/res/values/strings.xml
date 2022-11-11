@@ -2,5 +2,9 @@
     <string name="app_name">ProductPresentation</string>
     <string name="video_button_label">video</string>
     <string name="web_page_button_label">web page</string>
-    <string name="pick_button_label">pick</string>
+    <string name="pick_button_label">pick file</string>
+    <string name="play_from_url_button_label">play from url</string>
+    <string name="url_input_hint">http://media.developer.dolby.com/Atmos/MP4/Universe_Fury2.mp4</string>
+    <string name="open_url_button_label">open url</string>
+    <string name="web_page_url_input_hint">https://www.google.com</string>
 </resources>

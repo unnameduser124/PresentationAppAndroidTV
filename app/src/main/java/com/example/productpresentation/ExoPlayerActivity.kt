@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isGone
 import com.example.productpresentation.databinding.ExoPlayerActivityLayoutBinding
+import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import java.io.IOException
@@ -27,15 +29,36 @@ class ExoPlayerActivity: AppCompatActivity() {
         binding = ExoPlayerActivityLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.urlTextInput.setText("http://media.developer.dolby.com/Atmos/MP4/Universe_Fury2.mp4")
+        binding.videoPlayer.isGone = true
         hideStatusBar()
 
         try{
+            binding.videoPlayer.isGone = false
             playVideo(Uri.parse(intent.getStringExtra("URI")))
+            binding.filePickerButton.isGone = true
+            binding.urlTextInput.isGone = true
+            binding.urlTextInputLayout.isGone = true
+            binding.playFromUrlButton.isGone = true
         }
         catch (exception: NullPointerException){
             println("NO PATH")
         }
 
+        binding.playFromUrlButton.setOnClickListener{
+            val link = binding.urlTextInput.text.toString()
+            try{
+                binding.videoPlayer.isGone = false
+                playVideo(Uri.parse(link))
+                binding.filePickerButton.isGone = true
+                binding.urlTextInput.isGone = true
+                binding.urlTextInputLayout.isGone = true
+                binding.playFromUrlButton.isGone = true
+            }
+            catch(exception: ExoPlaybackException){
+                println(exception.message)
+            }
+        }
         binding.filePickerButton.setOnClickListener {
             stopVideo()
             val i = Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)

@@ -12,10 +12,14 @@ class WebViewActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = WebViewActivityLayoutBinding.inflate(layoutInflater)
-        val webView = WebView(this)
-        val webViewClient = CustomWebViewClient()
-        webView.webViewClient  = webViewClient
-        setContentView(webView)
-        webView.loadUrl("https://google.com")
+        setContentView(binding.root)
+        binding.openUrlButton.setOnClickListener {
+            val link = binding.urlWebPageInput.text.toString()
+            val webView = WebView(this)
+            val webViewClient = CustomWebViewClient(link)
+            webView.webViewClient  = webViewClient
+            webView.loadUrl(link)
+            setContentView(webView)
+        }
     }
 }
