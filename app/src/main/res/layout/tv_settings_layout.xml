@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id = "@+id/source_radio_group"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:id = "@+id/photo_option"
+            android:text = "@string/images_radio_button_label"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:id = "@+id/video_option"
+            android:text = "@string/video_radio_button_label"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:id = "@+id/web_page_option"
+            android:text = "@string/web_page_radio_button_label"/>
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:id = "@+id/tv_settings_from_url_edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/source_radio_group"
+        android:visibility="gone"
+        android:hint="@string/your_video_url_edit_text_hint"/>
+
+    <EditText
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:id = "@+id/tv_settings_web_url_edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/source_radio_group"
+        android:visibility="gone"
+        android:hint="@string/your_web_page_url_edit_text_hint"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

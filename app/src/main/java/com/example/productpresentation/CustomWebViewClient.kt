@@ -1,11 +1,8 @@
 package com.example.productpresentation
 
-import android.os.Handler
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
-import kotlinx.coroutines.currentCoroutineContext
-import kotlin.coroutines.coroutineContext
 
 class CustomWebViewClient(val link: String) : WebViewClient() {
 

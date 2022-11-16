@@ -7,4 +7,9 @@
     <string name="url_input_hint">http://media.developer.dolby.com/Atmos/MP4/Universe_Fury2.mp4</string>
     <string name="open_url_button_label">open url</string>
     <string name="web_page_url_input_hint">https://www.google.com</string>
+    <string name="web_page_radio_button_label">web page</string>
+    <string name="video_radio_button_label">video</string>
+    <string name="images_radio_button_label">images</string>
+    <string name="your_video_url_edit_text_hint">your video url</string>
+    <string name="your_web_page_url_edit_text_hint">your web page url</string>
 </resources>

@@ -1,8 +1,11 @@
 package com.example.productpresentation
 
 import android.Manifest
+import android.app.Service
+import android.app.UiModeManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -13,6 +16,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.productpresentation.databinding.ActivityMainBinding
+import com.example.productpresentation.tv.TvActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +28,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         checkStoragePermission()
         hideStatusBar()
+
+        val uiModeManager = getSystemService(UI_MODE_SERVICE)
+
+        if ((uiModeManager as UiModeManager).currentModeType == Configuration.UI_MODE_TYPE_TELEVISION) {
+            val intent = Intent(this, TvActivity::class.java)
+            finishAffinity()
+            startActivity(intent)
+        }
 
         binding.webViewButton.setOnClickListener {
             val intent = Intent(this, WebViewActivity::class.java)
