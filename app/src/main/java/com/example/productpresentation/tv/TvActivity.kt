@@ -10,6 +10,7 @@ import androidx.core.widget.addTextChangedListener
 import com.example.productpresentation.databinding.TvMainActivityBinding
 
 
+//default activity for android tv devices
 class TvActivity: AppCompatActivity() {
 
     private lateinit var binding: TvMainActivityBinding
@@ -19,10 +20,10 @@ class TvActivity: AppCompatActivity() {
         binding = TvMainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        //hide text view to write admin code into
         binding.tvUrlTextInput.showSoftInputOnFocus = false
         binding.tvUrlTextInput.requestFocus()
-
+        //disable soft input keyboard
         binding.tvUrlTextInput.inputType = InputType.TYPE_NULL
 
         binding.tvUrlTextInput.addTextChangedListener {
@@ -33,6 +34,7 @@ class TvActivity: AppCompatActivity() {
         }
     }
 
+    //register remote key presses, maybe enable admin access after certain remote key press combination?
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
@@ -52,6 +54,7 @@ class TvActivity: AppCompatActivity() {
                 return true
             }
             KeyEvent.KEYCODE_DPAD_CENTER -> {
+                //for some reason doesn't register center button click
                 Toast.makeText(this, "dpadcenter", Toast.LENGTH_SHORT).show()
                 return true
             }

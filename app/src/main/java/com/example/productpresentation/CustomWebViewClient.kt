@@ -4,24 +4,26 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 
-class CustomWebViewClient(val link: String) : WebViewClient() {
+//custom web view client implemented to override navigation to pages outside domain
+class CustomWebViewClient(private val link: String) : WebViewClient() {
 
+    @Deprecated("Deprecated in Java")
     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
         println("$url ${getDomain()}")
-        if(!url.toString().contains(getDomain())){
+        return if(!url.toString().contains(getDomain())){
             Toast.makeText(view?.context, "not allowed/invalid link", Toast.LENGTH_SHORT).show()
-            return true
-        }
-        else{
-            return false
+            true
+        } else{
+            false
         }
     }
 
+    //function extracting domain address from page link
     private fun getDomain(): String {
         var slashCounter = 0
         var domainName = ""
         if(link.contains("http")){
-            for(i in 0..link.length-1){
+            for(i in link.indices){
                 if(slashCounter==2){
                     domainName+=link[i]
                 }
@@ -31,7 +33,7 @@ class CustomWebViewClient(val link: String) : WebViewClient() {
             }
         }
         else{
-            for(i in 0..link.length-1){
+            for(i in link.indices){
                 if(link[i]!='/'){
                     domainName+=link[i]
                 }

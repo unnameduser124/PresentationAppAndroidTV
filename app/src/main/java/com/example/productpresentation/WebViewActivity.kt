@@ -2,7 +2,6 @@ package com.example.productpresentation
 
 import android.os.Bundle
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.example.productpresentation.databinding.WebViewActivityLayoutBinding
 
@@ -13,6 +12,7 @@ class WebViewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = WebViewActivityLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         binding.openUrlButton.setOnClickListener {
             val link = binding.urlWebPageInput.text.toString()
             val webView = WebView(this)

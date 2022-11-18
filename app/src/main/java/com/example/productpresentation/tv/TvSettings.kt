@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import com.example.productpresentation.databinding.TvSettingsLayoutBinding
 
+//settings activity for android tv devices
 class TvSettings: AppCompatActivity() {
 
     private lateinit var binding: TvSettingsLayoutBinding

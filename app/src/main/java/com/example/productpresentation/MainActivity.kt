@@ -1,20 +1,15 @@
 package com.example.productpresentation
 
 import android.Manifest
-import android.app.Service
 import android.app.UiModeManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import com.example.productpresentation.databinding.ActivityMainBinding
 import com.example.productpresentation.tv.TvActivity
 
@@ -27,10 +22,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         checkStoragePermission()
-        hideStatusBar()
 
+        //detect whether device is an android tv and if it is redirect to TvActivity
         val uiModeManager = getSystemService(UI_MODE_SERVICE)
-
         if ((uiModeManager as UiModeManager).currentModeType == Configuration.UI_MODE_TYPE_TELEVISION) {
             val intent = Intent(this, TvActivity::class.java)
             finishAffinity()
@@ -48,37 +42,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-    private fun hideSystemBars() {
-        val windowInsetsController =
-            ViewCompat.getWindowInsetsController(window.decorView) ?: return
-        // Configure the behavior of the hidden system bars
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        // Hide both the status bar and the navigation bar
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-    }
-
-    private fun hideStatusBar(){
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        actionBar?.hide()
-        window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            hideSystemBars()
-        }
-    }
-
+    //ask for storage permission needed to get access to media
     private fun checkStoragePermission(){
         val requestPermissionLauncher =
             registerForActivityResult(
                 ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
-                if (isGranted) {
-                    // Permission is granted. Continue the action or workflow in your
-                    // app.
-                } else {
+                if(!isGranted){
                     Toast.makeText(this, "permission needed", Toast.LENGTH_SHORT).show()
-                    //onBackPressed()
                 }
             }
 
@@ -87,7 +58,6 @@ class MainActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.MANAGE_EXTERNAL_STORAGE
             ) -> {
-                // You can use the API that requires the permission.
             }
             else -> {
                 requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)

@@ -21,7 +21,6 @@ class ExoPlayerActivity: AppCompatActivity() {
 
     private lateinit var binding: ExoPlayerActivityLayoutBinding
     private  var selectedVideoPath: String? = null
-    private val SELECT_VIDEO = 1
     private lateinit var player: ExoPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,10 +28,14 @@ class ExoPlayerActivity: AppCompatActivity() {
         binding = ExoPlayerActivityLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //default video link (for testing convenience)
         binding.urlTextInput.setText("http://media.developer.dolby.com/Atmos/MP4/Universe_Fury2.mp4")
+
         binding.videoPlayer.isGone = true
+
         hideStatusBar()
 
+        //try to play video from memory path passed through intent, catch error if link is null (may be unnecessary)
         try{
             binding.videoPlayer.isGone = false
             playVideo(Uri.parse(intent.getStringExtra("URI")))
@@ -66,6 +69,7 @@ class ExoPlayerActivity: AppCompatActivity() {
         }
     }
 
+    //function receiving intent from file picker
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
@@ -86,6 +90,7 @@ class ExoPlayerActivity: AppCompatActivity() {
         finish()
     }
 
+    //get video path from picker intent
     private fun getPath(uri: Uri?): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         val cursor: Cursor? = managedQuery(uri, projection, null, null, null)
@@ -96,6 +101,7 @@ class ExoPlayerActivity: AppCompatActivity() {
         } else null
     }
 
+    //play video from Uri and put it on repeat
     private fun playVideo(videoSource: Uri){
         player = ExoPlayer.Builder(this).build()
         binding.videoPlayer.player = player
@@ -106,18 +112,8 @@ class ExoPlayerActivity: AppCompatActivity() {
         player.repeatMode = ExoPlayer.REPEAT_MODE_ONE
         player.prepare()
         player.play()
-
-        //player.addListener(object: Player.Listener{
-        //    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-        //        if(playbackState == Player.STATE_ENDED){
-        //            player.setMediaItem(mediaItem)
-        //            println("ENDED")
-        //            player.prepare()
-        //            player.play()
-        //        }
-        //    }
-        //})
     }
+
      private fun stopVideo(){
          try{
              player.stop()
@@ -127,22 +123,20 @@ class ExoPlayerActivity: AppCompatActivity() {
          }
      }
 
-    private fun hideSystemBars() {
-        val windowInsetsController =
-            ViewCompat.getWindowInsetsController(window.decorView) ?: return
-        // Configure the behavior of the hidden system bars
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        // Hide both the status bar and the navigation bar
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-    }
-
+    //hide status bar, available on swipe
     private fun hideStatusBar(){
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         actionBar?.hide()
-        window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
+        window.decorView.setOnSystemUiVisibilityChangeListener {
             hideSystemBars()
         }
+    }
+    private fun hideSystemBars() {
+        val windowInsetsController =
+            ViewCompat.getWindowInsetsController(window.decorView) ?: return
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
     }
 
     override fun onBackPressed() {
@@ -156,5 +150,9 @@ class ExoPlayerActivity: AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopVideo()
+    }
+
+    companion object{
+        const val SELECT_VIDEO = 1
     }
 }
