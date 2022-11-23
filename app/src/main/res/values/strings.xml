@@ -13,4 +13,10 @@
     <string name="your_video_url_edit_text_hint">your video url</string>
     <string name="your_web_page_url_edit_text_hint">your web page url</string>
     <string name="pick_images_button_label">pick images</string>
+    <string name="password_input_hint">password</string>
+    <string name="confirm_button_label">confirm</string>
+    <string name="settings_radio_button_label">settings</string>
+    <string name="new_password_input_hint">new password</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="cancel_button_label">cancel</string>
 </resources>

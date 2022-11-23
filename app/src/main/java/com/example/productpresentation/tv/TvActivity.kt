@@ -12,6 +12,7 @@ import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import com.example.productpresentation.CustomChromeWebViewClient
 import com.example.productpresentation.CustomWebViewClient
+import com.example.productpresentation.admin
 import com.example.productpresentation.databinding.TvMainActivityBinding
 import com.example.productpresentation.tv.TvSettings.MediaTypeSettings.uri
 import com.google.android.exoplayer2.ExoPlayer
@@ -39,7 +40,7 @@ class TvActivity: AppCompatActivity() {
         binding.tvActivityAdminCodeInput.inputType = InputType.TYPE_NULL
 
         binding.tvActivityAdminCodeInput.addTextChangedListener {
-            if(it.toString() == "code"){
+            if(it.toString() == admin.accessCode){
                 binding.tvActivityAdminCodeInput.setText("")
                 stopVideo()
                 val intent = Intent(this, TvSettings::class.java)
