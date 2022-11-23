@@ -9,7 +9,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:id = "@+id/tv_url_text_input_layout"
+        android:id = "@+id/tv_activity_admin_code_input_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,8 +19,28 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id = "@+id/tv_url_text_input"
+            android:id = "@+id/tv_activity_admin_code_input"
             android:hint="@string/url_input_hint"/>
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id = "@+id/tv_activity_video_player"
+        app:use_controller="false"
+        android:visibility="gone"
+        app:player_layout_id="@layout/exo_player_view"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id = "@+id/tv_activity_image_view"
+        android:visibility="gone"/>
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id = "@+id/tv_activity_web_view"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

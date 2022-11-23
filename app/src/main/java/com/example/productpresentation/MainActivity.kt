@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         val uiModeManager = getSystemService(UI_MODE_SERVICE)
         if ((uiModeManager as UiModeManager).currentModeType == Configuration.UI_MODE_TYPE_TELEVISION) {
             val intent = Intent(this, TvActivity::class.java)
-            finishAffinity()
+            finish()
             startActivity(intent)
         }
 
@@ -42,6 +42,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //fun makePreferred(c: Context) {
+    //    val p: PackageManager = c.packageManager
+    //    val cN = ComponentName(c, MainActivity::class.java)
+    //    p.setComponentEnabledSetting(
+    //        cN,
+    //        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+    //        PackageManager.DONT_KILL_APP
+    //    )
+    //    val selector = Intent(Intent.ACTION_MAIN)
+    //    selector.addCategory(Intent.CATEGORY_HOME)
+    //    c.startActivity(selector)
+    //    p.setComponentEnabledSetting(
+    //        cN,
+    //        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+    //        PackageManager.DONT_KILL_APP
+    //    )
+    //}
     //ask for storage permission needed to get access to media
     private fun checkStoragePermission(){
         val requestPermissionLauncher =

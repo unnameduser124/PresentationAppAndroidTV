@@ -12,4 +12,5 @@
     <string name="images_radio_button_label">images</string>
     <string name="your_video_url_edit_text_hint">your video url</string>
     <string name="your_web_page_url_edit_text_hint">your web page url</string>
+    <string name="pick_images_button_label">pick images</string>
 </resources>

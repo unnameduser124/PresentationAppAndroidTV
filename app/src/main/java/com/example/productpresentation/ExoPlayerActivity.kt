@@ -6,6 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -15,13 +17,25 @@ import com.example.productpresentation.databinding.ExoPlayerActivityLayoutBindin
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import java.io.IOException
 
-class ExoPlayerActivity: AppCompatActivity() {
+class ExoPlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ExoPlayerActivityLayoutBinding
-    private  var selectedVideoPath: String? = null
+    //private var selectedVideoPath: String? = null
     private lateinit var player: ExoPlayer
+
+    private val pickMultipleMedia =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                this.contentResolver.takePersistableUriPermission(uri, flag)
+                playVideo(uri)
+            } else {
+                println("NO FILES SELECTED")
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,75 +48,76 @@ class ExoPlayerActivity: AppCompatActivity() {
         binding.videoPlayer.isGone = true
 
         hideStatusBar()
+        binding.videoPlayer.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 
         //try to play video from memory path passed through intent, catch error if link is null (may be unnecessary)
-        try{
+        try {
             binding.videoPlayer.isGone = false
             playVideo(Uri.parse(intent.getStringExtra("URI")))
             binding.filePickerButton.isGone = true
             binding.urlTextInput.isGone = true
             binding.urlTextInputLayout.isGone = true
             binding.playFromUrlButton.isGone = true
-        }
-        catch (exception: NullPointerException){
+        } catch (exception: NullPointerException) {
             println("NO PATH")
         }
 
-        binding.playFromUrlButton.setOnClickListener{
+        binding.playFromUrlButton.setOnClickListener {
             val link = binding.urlTextInput.text.toString()
-            try{
+            try {
                 binding.videoPlayer.isGone = false
                 playVideo(Uri.parse(link))
                 binding.filePickerButton.isGone = true
                 binding.urlTextInput.isGone = true
                 binding.urlTextInputLayout.isGone = true
                 binding.playFromUrlButton.isGone = true
-            }
-            catch(exception: ExoPlaybackException){
+            } catch (exception: ExoPlaybackException) {
                 println(exception.message)
             }
         }
         binding.filePickerButton.setOnClickListener {
-            stopVideo()
-            val i = Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(i, SELECT_VIDEO)
+            //stopVideo()
+            //val i = Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+            //startActivityForResult(i, SELECT_VIDEO)
+            pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
+
         }
     }
 
     //function receiving intent from file picker
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            selectedVideoPath = getPath(data?.data)
-            try {
-                if (selectedVideoPath == null) {
-                    finish()
-                } else {
-                    println(selectedVideoPath)
-                    val intent = Intent(this, ExoPlayerActivity::class.java)
-                    intent.putExtra("URI", selectedVideoPath)
-                    startActivity(intent)
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-        finish()
-    }
+    //override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    //    super.onActivityResult(requestCode, resultCode, data)
+    //    if (resultCode == RESULT_OK) {
+    //        selectedVideoPath = getPath(data?.data)
+    //        try {
+    //            if (selectedVideoPath == null) {
+    //                finish()
+    //            } else {
+    //                println(selectedVideoPath)
+    //                val intent = Intent(this, ExoPlayerActivity::class.java)
+    //                intent.putExtra("URI", selectedVideoPath)
+    //                startActivity(intent)
+    //            }
+    //        } catch (e: IOException) {
+    //            e.printStackTrace()
+    //        }
+    //    }
+    //    finish()
+    //}
 
-    //get video path from picker intent
-    private fun getPath(uri: Uri?): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor: Cursor? = managedQuery(uri, projection, null, null, null)
-        return if (cursor != null) {
-            val columnIndex: Int = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
-            cursor.moveToFirst()
-            cursor.getString(columnIndex)
-        } else null
-    }
+    ////get video path from picker intent
+    //private fun getPath(uri: Uri?): String? {
+    //    val projection = arrayOf(MediaStore.Images.Media.DATA)
+    //    val cursor: Cursor? = managedQuery(uri, projection, null, null, null)
+    //    return if (cursor != null) {
+    //        val columnIndex: Int = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+    //        cursor.moveToFirst()
+    //        cursor.getString(columnIndex)
+    //    } else null
+    //}
 
     //play video from Uri and put it on repeat
-    private fun playVideo(videoSource: Uri){
+    private fun playVideo(videoSource: Uri) {
         player = ExoPlayer.Builder(this).build()
         binding.videoPlayer.player = player
         binding.videoPlayer.keepScreenOn = true
@@ -114,23 +129,23 @@ class ExoPlayerActivity: AppCompatActivity() {
         player.play()
     }
 
-     private fun stopVideo(){
-         try{
-             player.stop()
-         }
-         catch(exception: UninitializedPropertyAccessException){
-             println(exception.message)
-         }
-     }
+    private fun stopVideo() {
+        try {
+            player.stop()
+        } catch (exception: UninitializedPropertyAccessException) {
+            println(exception.message)
+        }
+    }
 
     //hide status bar, available on swipe
-    private fun hideStatusBar(){
+    private fun hideStatusBar() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         actionBar?.hide()
         window.decorView.setOnSystemUiVisibilityChangeListener {
             hideSystemBars()
         }
     }
+
     private fun hideSystemBars() {
         val windowInsetsController =
             ViewCompat.getWindowInsetsController(window.decorView) ?: return
@@ -152,7 +167,7 @@ class ExoPlayerActivity: AppCompatActivity() {
         stopVideo()
     }
 
-    companion object{
+    companion object {
         const val SELECT_VIDEO = 1
     }
 }

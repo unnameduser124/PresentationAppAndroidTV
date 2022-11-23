@@ -1,32 +1,15 @@
 package com.example.productpresentation
 
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.net.Uri
+import android.webkit.*
 import android.widget.Toast
 
 
 //custom web view client implemented to override navigation to pages outside domain
-class CustomWebViewClient(private val link: String) : WebViewClient() {
+class CustomChromeWebViewClient(private val link: String) : WebChromeClient() {
 
-    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-        println("$url ${getDomain()}")
-        return if(!url.toString().contains(getDomain())){
-            Toast.makeText(view?.context, "not allowed/invalid link", Toast.LENGTH_SHORT).show()
-            true
-        } else{
-            false
-        }
-    }
-
-    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest): Boolean {
-        println("${request.url} ${getDomain()}")
-        return if(!request.url.toString().contains(getDomain())){
-            Toast.makeText(view?.context, "not allowed/invalid link", Toast.LENGTH_SHORT).show()
-            true
-        } else{
-            false
-        }
+    override fun onReceivedTitle(view: WebView?, title: String?) {
+        super.onReceivedTitle(view, title)
     }
 
     //function extracting domain address from page link
