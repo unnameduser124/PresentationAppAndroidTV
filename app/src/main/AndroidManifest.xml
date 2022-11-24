@@ -23,29 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProductPresentation"
         tools:targetApi="31">
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity android:name=".WebViewActivity"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".ExoPlayerActivity"
-            android:parentActivityName=".MainActivity"/>
         <activity
             android:name="com.example.productpresentation.tv.TvActivity"
-            android:label="@string/app_name"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:stateNotNeeded="true"
@@ -53,33 +33,23 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.LAUNCHER_APP" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                <!--category.DEFAULT may be unnecessary because app should be called through category.HOME, but I am not sure -->
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.MONKEY" />
             </intent-filter>
 
         </activity>
         <activity
-            android:name="com.example.productpresentation.tv.TvSettings"
-            android:label="@string/app_name"
+            android:name=".tv.TvSettings"
+            android:parentActivityName=".tv.TvActivity"
             android:exported="true">
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
 
         </activity>
-        <receiver android:name=".bootstart.StartActivityOnBootReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.QUICKBOO_POWERON"/>
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
