@@ -19,4 +19,5 @@
     <string name="new_password_input_hint">new password</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="cancel_button_label">cancel</string>
+    <string name="locked_out_time_label">10 min 0 s</string>
 </resources>

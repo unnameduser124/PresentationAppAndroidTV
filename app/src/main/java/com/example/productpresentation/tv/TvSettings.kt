@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -17,10 +18,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
 import androidx.core.widget.doOnTextChanged
-import com.example.productpresentation.admin
+import com.example.productpresentation.*
+import com.example.productpresentation.databinding.AdminPanelLockPopupBinding
 import com.example.productpresentation.databinding.AdminPasswordPopupBinding
 import com.example.productpresentation.databinding.ConfirmPopupBinding
 import com.example.productpresentation.databinding.TvSettingsLayoutBinding
+import java.util.*
 
 
 //settings activity for android tv devices
@@ -42,6 +45,17 @@ class TvSettings: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = TvSettingsLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if(configurationLocked){
+            binding.root.post{
+                lockedOutPopup()
+            }
+        }
+        else{
+            binding.root.post{
+                passwordPopup()
+            }
+        }
 
         binding.sourceRadioGroup.setOnCheckedChangeListener { _, i ->
             if(i==binding.photoOption.id){
@@ -102,9 +116,6 @@ class TvSettings: AppCompatActivity() {
             }
         }
 
-        binding.root.post{
-            passwordPopup()
-        }
     }
     enum class MediaType{
         Photos,
@@ -161,9 +172,48 @@ class TvSettings: AppCompatActivity() {
                 popupWindow.dismiss()
             }
             else{
+                wrongPasswordCounter++
                 Toast.makeText(this, "Wrong password!", Toast.LENGTH_SHORT).show()
+                if(wrongPasswordCounter>2){
+                    popupWindow.dismiss()
+                    lockTimeStart = Calendar.getInstance().timeInMillis
+                    configurationLocked = true
+                    binding.root.post{
+                        lockedOutPopup()
+                    }
+                }
             }
         }
+    }
+
+    private fun lockedOutPopup(){
+        val popupBinding = AdminPanelLockPopupBinding.inflate(layoutInflater)
+
+        val popupWindow = getPopupWindow(popupBinding.root)
+        popupWindow.isFocusable = false
+
+        popupWindow.showAtLocation(binding.root, Gravity.CENTER, 0, 0)
+
+        popupBinding.lockedOutTime.text = "${formatTime(getTimeLeft())}"
+
+        val handler = Handler(mainLooper)
+        val runnable = object: Runnable{
+            override fun run() {
+                popupBinding.lockedOutTime.text = "${formatTime(getTimeLeft())}"
+                if(getTimeLeft()<=0){
+                    configurationLocked=false
+                    popupWindow.dismiss()
+                    wrongPasswordCounter = 0
+                    binding.root.post{
+                        passwordPopup()
+                    }
+                }
+                if(configurationLocked){
+                    handler.postDelayed(this, 100)
+                }
+            }
+        }
+        handler.post(runnable)
     }
 
     private fun confirmPasswordChangePopup(){
@@ -180,6 +230,17 @@ class TvSettings: AppCompatActivity() {
         popupBinding.cancelButton.setOnClickListener {
             popupWindow.dismiss()
         }
+    }
+
+    private fun getTimeLeft(): Long{
+        return (lockTimeStart+600000)-Calendar.getInstance().timeInMillis
+    }
+
+    private fun formatTime(timeInMillis: Long): String{
+        val seconds = timeInMillis/1000
+        val minutes = seconds/60
+        val leftSeconds = seconds%60
+        return "$minutes min $leftSeconds s"
     }
 
     private fun onExit(){

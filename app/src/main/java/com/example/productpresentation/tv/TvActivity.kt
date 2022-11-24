@@ -14,6 +14,7 @@ import com.example.productpresentation.CustomChromeWebViewClient
 import com.example.productpresentation.CustomWebViewClient
 import com.example.productpresentation.admin
 import com.example.productpresentation.databinding.TvMainActivityBinding
+import com.example.productpresentation.lockTimeStart
 import com.example.productpresentation.tv.TvSettings.MediaTypeSettings.uri
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -135,7 +136,7 @@ class TvActivity: AppCompatActivity() {
 
     private fun playMedia(){
         if(TvSettings.currentMediaType == TvSettings.MediaType.Photos){
-            TODO("Don't know what will be the photo source")
+            //TODO("Don't know what will be the photo source")
         }
         else if(TvSettings.currentMediaType == TvSettings.MediaType.Video){
             playVideo(uri)
@@ -148,6 +149,7 @@ class TvActivity: AppCompatActivity() {
             binding.tvActivityWebView.loadUrl(TvSettings.webPageLink)
         }
     }
+
 
     private fun requestTextInputFocus(){
         val handler = Handler(mainLooper)
