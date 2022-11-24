@@ -20,4 +20,6 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="cancel_button_label">cancel</string>
     <string name="locked_out_time_label">10 min 0 s</string>
+    <string name="display_time_input_hint">display time</string>
+    <string name="new_configuration_code_input_hint">new configuration code</string>
 </resources>

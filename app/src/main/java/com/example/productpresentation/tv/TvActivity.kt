@@ -13,11 +13,12 @@ import androidx.core.widget.addTextChangedListener
 import com.example.productpresentation.CustomChromeWebViewClient
 import com.example.productpresentation.CustomWebViewClient
 import com.example.productpresentation.admin
+import com.example.productpresentation.database.ConfigurationDatabase
 import com.example.productpresentation.databinding.TvMainActivityBinding
-import com.example.productpresentation.lockTimeStart
 import com.example.productpresentation.tv.TvSettings.MediaTypeSettings.uri
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import java.util.*
 
 
 //default activity for android tv devices
@@ -25,6 +26,7 @@ class TvActivity: AppCompatActivity() {
 
     private lateinit var binding: TvMainActivityBinding
     private lateinit var player: ExoPlayer
+    private var lastInputTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,8 @@ class TvActivity: AppCompatActivity() {
         showViews()
         playMedia()
         requestTextInputFocus()
+        ConfigurationDatabase(this).getConfiguration()
+        println(admin.accessCode)
 
         //hide text view to write admin code into
         binding.tvActivityAdminCodeInput.showSoftInputOnFocus = false
@@ -41,11 +45,26 @@ class TvActivity: AppCompatActivity() {
         binding.tvActivityAdminCodeInput.inputType = InputType.TYPE_NULL
 
         binding.tvActivityAdminCodeInput.addTextChangedListener {
+            lastInputTime = Calendar.getInstance().timeInMillis
             if(it.toString() == admin.accessCode){
                 binding.tvActivityAdminCodeInput.setText("")
                 stopVideo()
                 val intent = Intent(this, TvSettings::class.java)
                 startActivity(intent)
+            }
+            else{
+                val handler = Handler(mainLooper)
+                val runnable = object: Runnable{
+                    override fun run() {
+                        if(Calendar.getInstance().timeInMillis - lastInputTime > 10000){
+                            binding.tvActivityAdminCodeInput.setText("")
+                        }
+                        else{
+                            handler.postDelayed(this, 500)
+                        }
+                    }
+                }
+                handler.post(runnable)
             }
         }
     }
@@ -119,15 +138,15 @@ class TvActivity: AppCompatActivity() {
     }
 
     private fun showViews(){
-        if(TvSettings.currentMediaType == TvSettings.MediaType.Photos){
+        if(TvSettings.currentMediaType == MediaType.Photos){
             println(TvSettings.currentMediaType)
             binding.tvActivityImageView.isGone = false
         }
-        else if(TvSettings.currentMediaType == TvSettings.MediaType.Video){
+        else if(TvSettings.currentMediaType == MediaType.Video){
             println(TvSettings.currentMediaType)
             binding.tvActivityVideoPlayer.isGone = false
         }
-        else if(TvSettings.currentMediaType == TvSettings.MediaType.WebPage){
+        else if(TvSettings.currentMediaType == MediaType.WebPage){
             println(TvSettings.currentMediaType)
             binding.tvActivityWebView.isGone = false
         }
@@ -135,13 +154,13 @@ class TvActivity: AppCompatActivity() {
     }
 
     private fun playMedia(){
-        if(TvSettings.currentMediaType == TvSettings.MediaType.Photos){
+        if(TvSettings.currentMediaType == MediaType.Photos){
             //TODO("Don't know what will be the photo source")
         }
-        else if(TvSettings.currentMediaType == TvSettings.MediaType.Video){
+        else if(TvSettings.currentMediaType == MediaType.Video){
             playVideo(uri)
         }
-        else if(TvSettings.currentMediaType == TvSettings.MediaType.WebPage){
+        else if(TvSettings.currentMediaType == MediaType.WebPage){
             val webViewClient = CustomWebViewClient(TvSettings.webPageLink)
             binding.tvActivityWebView.webViewClient  = webViewClient
             val webChromeClient =  CustomChromeWebViewClient(TvSettings.webPageLink)

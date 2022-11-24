@@ -1,9 +1,10 @@
 package com.example.productpresentation
 
 import com.example.productpresentation.tv.AdminConfig
+import com.example.productpresentation.tv.MediaType
 import java.util.*
 
-val admin: AdminConfig = AdminConfig("code", "password")
+var admin: AdminConfig = AdminConfig("code", "password", MediaType.NoSelection, 30, 0)
 var configurationLocked = false
 var wrongPasswordCounter = 0
 var lockTimeStart = Calendar.getInstance().timeInMillis

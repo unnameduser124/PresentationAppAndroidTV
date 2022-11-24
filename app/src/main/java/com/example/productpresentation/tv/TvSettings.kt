@@ -41,6 +41,8 @@ class TvSettings: AppCompatActivity() {
             }
         }
     private lateinit var binding: TvSettingsLayoutBinding
+    private var locked = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = TvSettingsLayoutBinding.inflate(layoutInflater)
@@ -65,6 +67,9 @@ class TvSettings: AppCompatActivity() {
                 binding.pickPhotosButton.isGone = false
                 binding.passwordChangeInputLayout.isGone = true
                 binding.confirmPasswordChangeButton.isGone = true
+                binding.photoDisplayTimeInputLayout.isGone = false
+                binding.configurationCodeInputLayout.isGone = true
+                binding.confirmConfigurationCodeChangeButton.isGone = true
                 currentMediaType = MediaType.Photos
             }
             if(i==binding.videoOption.id){
@@ -73,6 +78,9 @@ class TvSettings: AppCompatActivity() {
                 binding.pickPhotosButton.isGone = true
                 binding.passwordChangeInputLayout.isGone = true
                 binding.confirmPasswordChangeButton.isGone = true
+                binding.photoDisplayTimeInputLayout.isGone = true
+                binding.configurationCodeInputLayout.isGone = true
+                binding.confirmConfigurationCodeChangeButton.isGone = true
                 currentMediaType = MediaType.Video
             }
             if(i==binding.webPageOption.id){
@@ -81,6 +89,9 @@ class TvSettings: AppCompatActivity() {
                 binding.pickPhotosButton.isGone = true
                 binding.passwordChangeInputLayout.isGone = true
                 binding.confirmPasswordChangeButton.isGone = true
+                binding.photoDisplayTimeInputLayout.isGone = true
+                binding.configurationCodeInputLayout.isGone = true
+                binding.confirmConfigurationCodeChangeButton.isGone = true
                 currentMediaType = MediaType.WebPage
             }
             if(i==binding.adminSettings.id){
@@ -89,6 +100,9 @@ class TvSettings: AppCompatActivity() {
                 binding.pickPhotosButton.isGone = true
                 binding.passwordChangeInputLayout.isGone = false
                 binding.confirmPasswordChangeButton.isGone = false
+                binding.photoDisplayTimeInputLayout.isGone = true
+                binding.configurationCodeInputLayout.isGone = false
+                binding.confirmConfigurationCodeChangeButton.isGone = false
             }
         }
 
@@ -116,13 +130,20 @@ class TvSettings: AppCompatActivity() {
             }
         }
 
+        binding.confirmConfigurationCodeChangeButton.setOnClickListener{
+            val newCode = binding.configurationCodeInput.text.toString()
+            if(newCode!=""){
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(it.windowToken, 0)
+
+                binding.root.post{
+                    confirmCodeChangePopup()
+                }
+            }
+        }
+
     }
-    enum class MediaType{
-        Photos,
-        Video,
-        WebPage,
-        NoSelection
-    }
+
 
     private fun setupViewsOnStart(){
         when (currentMediaType) {
@@ -169,6 +190,7 @@ class TvSettings: AppCompatActivity() {
         })
         popupBinding.passwordConfirmButton.setOnClickListener { 
             if(popupBinding.adminPanelPasswordInput.text.toString() == admin.password){
+                locked = false
                 popupWindow.dismiss()
             }
             else{
@@ -184,8 +206,37 @@ class TvSettings: AppCompatActivity() {
                 }
             }
         }
+        popupWindow.setOnDismissListener {
+            if(locked){
+                val intent = Intent(this, TvActivity::class.java)
+                finishAffinity()
+                startActivity(intent)
+            }
+        }
     }
 
+    private fun confirmCodeChangePopup() {
+        val popupBinding = ConfirmPopupBinding.inflate(layoutInflater)
+
+        val popupWindow = getPopupWindow(popupBinding.root)
+
+        popupWindow.showAtLocation(binding.root, Gravity.CENTER, 0, 0)
+
+        popupWindow.setTouchInterceptor(object : View.OnTouchListener {
+            override fun onTouch(view: View?, motionEvent: MotionEvent): Boolean {
+                if (motionEvent.x < 0 || motionEvent.x > LinearLayout.LayoutParams.WRAP_CONTENT) return true
+                return motionEvent.y < 0 || motionEvent.y > LinearLayout.LayoutParams.WRAP_CONTENT
+            }
+        })
+
+        popupBinding.confirmButton.setOnClickListener {
+            admin.accessCode = binding.configurationCodeInput.text.toString()
+            popupWindow.dismiss()
+        }
+        popupBinding.cancelButton.setOnClickListener {
+            popupWindow.dismiss()
+        }
+    }
     private fun lockedOutPopup(){
         val popupBinding = AdminPanelLockPopupBinding.inflate(layoutInflater)
 
@@ -214,6 +265,8 @@ class TvSettings: AppCompatActivity() {
             }
         }
         handler.post(runnable)
+
+
     }
 
     private fun confirmPasswordChangePopup(){
@@ -254,6 +307,7 @@ class TvSettings: AppCompatActivity() {
         var photoUris = mutableListOf<Uri>()
         var webPageLink = ""
         lateinit var uri: Uri
+        var photoDisplayTimeSeconds = 30
         fun uriInitialized(): Boolean {
             return this::uri.isInitialized
         }

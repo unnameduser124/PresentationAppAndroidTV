@@ -82,6 +82,22 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:id = "@+id/photo_display_time_input_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pick_photos_button"
+        android:visibility="gone"
+        android:layout_margin="10dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:id = "@+id/photo_display_time_input"
+            android:hint = "@string/display_time_input_hint"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:id = "@+id/password_change_input_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/source_radio_group"
@@ -100,8 +116,37 @@
         android:layout_height="wrap_content"
         android:id = "@+id/confirm_password_change_button"
         app:layout_constraintTop_toBottomOf="@id/password_change_input_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin = "10dp"
+        app:layout_constraintStart_toStartOf="@id/password_change_input_layout"
+        app:layout_constraintEnd_toEndOf="@id/password_change_input_layout"
+        android:layout_marginTop = "10dp"
         android:visibility="gone"
         android:text = "@string/confirm_button_label"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:id = "@+id/configuration_code_input_layout"
+        app:layout_constraintStart_toEndOf="@id/password_change_input_layout"
+        app:layout_constraintTop_toBottomOf="@id/source_radio_group"
+        android:visibility="gone"
+        android:layout_margin="10dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:id = "@+id/configuration_code_input"
+            android:hint = "@string/new_configuration_code_input_hint"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id = "@+id/confirm_configuration_code_change_button"
+        app:layout_constraintTop_toBottomOf="@id/password_change_input_layout"
+        app:layout_constraintStart_toStartOf="@id/configuration_code_input_layout"
+        app:layout_constraintEnd_toEndOf="@id/configuration_code_input_layout"
+        android:layout_marginTop = "10dp"
+        android:visibility="gone"
+        android:text = "@string/confirm_button_label"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
