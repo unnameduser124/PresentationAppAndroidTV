@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
 import androidx.core.widget.doOnTextChanged
 import com.example.productpresentation.*
+import com.example.productpresentation.database.ConfigurationDBService
 import com.example.productpresentation.databinding.AdminPanelLockPopupBinding
 import com.example.productpresentation.databinding.AdminPasswordPopupBinding
 import com.example.productpresentation.databinding.ConfirmPopupBinding
@@ -70,7 +71,7 @@ class TvSettings: AppCompatActivity() {
                 binding.photoDisplayTimeInputLayout.isGone = false
                 binding.configurationCodeInputLayout.isGone = true
                 binding.confirmConfigurationCodeChangeButton.isGone = true
-                currentMediaType = MediaType.Photos
+                admin.mediaType = MediaType.Photos
             }
             if(i==binding.videoOption.id){
                 binding.tvSettingsVideoFromUrlEditTextLayout.isGone = false
@@ -81,7 +82,7 @@ class TvSettings: AppCompatActivity() {
                 binding.photoDisplayTimeInputLayout.isGone = true
                 binding.configurationCodeInputLayout.isGone = true
                 binding.confirmConfigurationCodeChangeButton.isGone = true
-                currentMediaType = MediaType.Video
+                admin.mediaType = MediaType.Video
             }
             if(i==binding.webPageOption.id){
                 binding.tvSettingsWebUrlEditTextLayout.isGone = false
@@ -92,7 +93,7 @@ class TvSettings: AppCompatActivity() {
                 binding.photoDisplayTimeInputLayout.isGone = true
                 binding.configurationCodeInputLayout.isGone = true
                 binding.confirmConfigurationCodeChangeButton.isGone = true
-                currentMediaType = MediaType.WebPage
+                admin.mediaType = MediaType.WebPage
             }
             if(i==binding.adminSettings.id){
                 binding.tvSettingsWebUrlEditTextLayout.isGone = true
@@ -144,9 +145,8 @@ class TvSettings: AppCompatActivity() {
 
     }
 
-
     private fun setupViewsOnStart(){
-        when (currentMediaType) {
+        when (admin.mediaType) {
             MediaType.Video -> {
                 binding.videoOption.isChecked = true
                 binding.videoOption.callOnClick()
@@ -231,6 +231,7 @@ class TvSettings: AppCompatActivity() {
 
         popupBinding.confirmButton.setOnClickListener {
             admin.accessCode = binding.configurationCodeInput.text.toString()
+            ConfigurationDBService(it.context).updateConfiguration(admin)
             popupWindow.dismiss()
         }
         popupBinding.cancelButton.setOnClickListener {
@@ -278,6 +279,7 @@ class TvSettings: AppCompatActivity() {
 
         popupBinding.confirmButton.setOnClickListener {
             admin.password = binding.passwordChangeInput.text.toString()
+            ConfigurationDBService(it.context).updateConfiguration(admin)
             popupWindow.dismiss()
         }
         popupBinding.cancelButton.setOnClickListener {
@@ -299,11 +301,10 @@ class TvSettings: AppCompatActivity() {
     private fun onExit(){
         webPageLink = binding.tvSettingsWebUrlEditText.text.toString()
         uri = Uri.parse(binding.tvSettingsVideoFromUrlEditText.text.toString())
-
+        ConfigurationDBService(this).updateConfiguration(admin)
     }
 
     companion object MediaTypeSettings{
-        var currentMediaType = MediaType.NoSelection
         var photoUris = mutableListOf<Uri>()
         var webPageLink = ""
         lateinit var uri: Uri

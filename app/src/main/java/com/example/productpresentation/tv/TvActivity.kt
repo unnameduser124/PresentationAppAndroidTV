@@ -13,6 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import com.example.productpresentation.CustomChromeWebViewClient
 import com.example.productpresentation.CustomWebViewClient
 import com.example.productpresentation.admin
+import com.example.productpresentation.database.ConfigurationDBService
 import com.example.productpresentation.database.ConfigurationDatabase
 import com.example.productpresentation.databinding.TvMainActivityBinding
 import com.example.productpresentation.tv.TvSettings.MediaTypeSettings.uri
@@ -35,7 +36,8 @@ class TvActivity: AppCompatActivity() {
         showViews()
         playMedia()
         requestTextInputFocus()
-        ConfigurationDatabase(this).getConfiguration()
+        ConfigurationDBService(this).getConfiguration()
+        println(admin.password)
         println(admin.accessCode)
 
         //hide text view to write admin code into
@@ -138,29 +140,26 @@ class TvActivity: AppCompatActivity() {
     }
 
     private fun showViews(){
-        if(TvSettings.currentMediaType == MediaType.Photos){
-            println(TvSettings.currentMediaType)
+        if(admin.mediaType == MediaType.Photos){
             binding.tvActivityImageView.isGone = false
         }
-        else if(TvSettings.currentMediaType == MediaType.Video){
-            println(TvSettings.currentMediaType)
+        else if(admin.mediaType == MediaType.Video){
             binding.tvActivityVideoPlayer.isGone = false
         }
-        else if(TvSettings.currentMediaType == MediaType.WebPage){
-            println(TvSettings.currentMediaType)
+        else if(admin.mediaType == MediaType.WebPage){
             binding.tvActivityWebView.isGone = false
         }
 
     }
 
     private fun playMedia(){
-        if(TvSettings.currentMediaType == MediaType.Photos){
-            //TODO("Don't know what will be the photo source")
+        if(admin.mediaType == MediaType.Photos){
+            //TODO("Need to implement file explorer")
         }
-        else if(TvSettings.currentMediaType == MediaType.Video){
+        else if(admin.mediaType == MediaType.Video){
             playVideo(uri)
         }
-        else if(TvSettings.currentMediaType == MediaType.WebPage){
+        else if(admin.mediaType == MediaType.WebPage){
             val webViewClient = CustomWebViewClient(TvSettings.webPageLink)
             binding.tvActivityWebView.webViewClient  = webViewClient
             val webChromeClient =  CustomChromeWebViewClient(TvSettings.webPageLink)
