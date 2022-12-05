@@ -1,5 +1,6 @@
 package com.example.productpresentation.tv
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -14,7 +15,6 @@ import com.example.productpresentation.CustomChromeWebViewClient
 import com.example.productpresentation.CustomWebViewClient
 import com.example.productpresentation.admin
 import com.example.productpresentation.database.ConfigurationDBService
-import com.example.productpresentation.database.ConfigurationDatabase
 import com.example.productpresentation.databinding.TvMainActivityBinding
 import com.example.productpresentation.tv.TvSettings.MediaTypeSettings.uri
 import com.google.android.exoplayer2.ExoPlayer
@@ -33,12 +33,12 @@ class TvActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = TvMainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        requestStoragePermission()
         showViews()
         playMedia()
         requestTextInputFocus()
         ConfigurationDBService(this).getConfiguration()
-        println(admin.password)
-        println(admin.accessCode)
+
 
         //hide text view to write admin code into
         binding.tvActivityAdminCodeInput.showSoftInputOnFocus = false
@@ -181,6 +181,11 @@ class TvActivity: AppCompatActivity() {
 
         handler.post(runnable)
     }
+
+    private fun requestStoragePermission(){
+        requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), 1)
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         stopVideo()

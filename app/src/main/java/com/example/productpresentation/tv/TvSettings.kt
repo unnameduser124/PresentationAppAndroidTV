@@ -12,18 +12,21 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
 import androidx.core.widget.doOnTextChanged
-import com.example.productpresentation.*
+import com.example.productpresentation.admin
+import com.example.productpresentation.configurationLocked
 import com.example.productpresentation.database.ConfigurationDBService
 import com.example.productpresentation.databinding.AdminPanelLockPopupBinding
 import com.example.productpresentation.databinding.AdminPasswordPopupBinding
 import com.example.productpresentation.databinding.ConfirmPopupBinding
 import com.example.productpresentation.databinding.TvSettingsLayoutBinding
+import com.example.productpresentation.fileExplorer.FileExplorerActivity
+import com.example.productpresentation.lockTimeStart
+import com.example.productpresentation.wrongPasswordCounter
 import java.util.*
 
 
@@ -110,7 +113,8 @@ class TvSettings: AppCompatActivity() {
         setupViewsOnStart()
 
         binding.pickPhotosButton.setOnClickListener{
-            pickPhotos.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+            val intent = Intent(this, FileExplorerActivity::class.java)
+            startActivity(intent)
         }
 
         binding.tvSettingsWebUrlEditText.doOnTextChanged { text, start, before, count ->
@@ -144,6 +148,7 @@ class TvSettings: AppCompatActivity() {
         }
 
     }
+
 
     private fun setupViewsOnStart(){
         when (admin.mediaType) {

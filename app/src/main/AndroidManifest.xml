@@ -50,6 +50,16 @@
             </intent-filter>
 
         </activity>
+        <activity
+            android:name=".fileExplorer.FileExplorerActivity"
+            android:parentActivityName=".tv.TvSettings"
+            android:exported="true">
+
+            <intent-filter>
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
