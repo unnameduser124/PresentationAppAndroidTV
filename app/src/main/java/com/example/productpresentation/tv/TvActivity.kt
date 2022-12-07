@@ -17,6 +17,7 @@ import com.example.productpresentation.admin
 import com.example.productpresentation.database.ConfigurationDBService
 import com.example.productpresentation.databinding.TvMainActivityBinding
 import com.example.productpresentation.tv.TvSettings.MediaTypeSettings.uri
+import com.example.productpresentation.uriList
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import java.util.*
@@ -25,6 +26,7 @@ import java.util.*
 //default activity for android tv devices
 class TvActivity: AppCompatActivity() {
 
+    private var shuffling = false
     private lateinit var binding: TvMainActivityBinding
     private lateinit var player: ExoPlayer
     private var lastInputTime = 0L
@@ -152,9 +154,41 @@ class TvActivity: AppCompatActivity() {
 
     }
 
+    private fun setImage(uri: Uri) {
+        binding.tvActivityImageView.setImageURI(uri)
+    }
+
+    private fun startPhotoSlideshow(){
+        var index = 0
+        shuffling = true
+        val handler = Handler(mainLooper)
+        val runnableCode = object: Runnable {
+            override fun run(){
+                try {
+                    if (index < uriList.size) {
+                        setImage(uriList[index])
+                        index++
+                    } else {
+                        index = 0
+                        setImage(uriList[index])
+                    }
+                } catch (exception: UninitializedPropertyAccessException) {
+                    shuffling = false
+                    println(exception.message)
+                }
+                if(shuffling){
+                    handler.postDelayed(this, 1000)
+                }
+            }
+        }
+        handler.post(runnableCode)
+    }
+
     private fun playMedia(){
         if(admin.mediaType == MediaType.Photos){
-            //TODO("Need to implement file explorer")
+            if(uriList.isNotEmpty()){
+                startPhotoSlideshow()
+            }
         }
         else if(admin.mediaType == MediaType.Video){
             playVideo(uri)

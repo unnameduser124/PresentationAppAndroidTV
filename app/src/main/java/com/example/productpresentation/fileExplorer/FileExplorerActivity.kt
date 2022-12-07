@@ -1,5 +1,7 @@
 package com.example.productpresentation.fileExplorer
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.Toast
@@ -7,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productpresentation.databinding.FileExplorerLayoutBinding
+import com.example.productpresentation.tv.TvSettings
+import com.example.productpresentation.uriList
 import java.io.File
 
 class FileExplorerActivity: AppCompatActivity() {
@@ -14,10 +18,12 @@ class FileExplorerActivity: AppCompatActivity() {
     private lateinit var dataset: MutableList<FileItem>
     private lateinit var currentFile: File
     private lateinit var previousFile: File
+    private lateinit var mediaType: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FileExplorerLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        mediaType = intent.getStringExtra("MEDIA_TYPE").toString()
 
         val storage = System.getenv("EXTERNAL_STORAGE")
 
@@ -94,13 +100,40 @@ class FileExplorerActivity: AppCompatActivity() {
                 return true
             }
             KeyEvent.KEYCODE_DPAD_CENTER -> {
-                //for some reason doesn't register center button click
-                switchFile(dataset[getSelected()].file.absolutePath)
-                Toast.makeText(this, "dpadcenter", Toast.LENGTH_SHORT).show()
+                if(dataset[getSelected()].file.absolutePath!="/.pick"){
+                    switchFile(dataset[getSelected()].file.absolutePath)
+                }
+                else{
+                    val uris = getUris(currentFile)
+                    uriList.clear()
+                    uriList = uris
+                    val intent = Intent(this, TvSettings::class.java)
+                    intent.putExtra("REQUIRE_PASSWORD", false)
+                    finish()
+                    startActivity(intent)
+                }
                 return true
             }
             66->{
-                switchFile(dataset[getSelected()].file.absolutePath)
+                if(dataset[getSelected()].file.absolutePath!="/.pick"){
+                    switchFile(dataset[getSelected()].file.absolutePath)
+                }
+                else{
+                    val uris = getUris(currentFile)
+                    uriList.clear()
+                    uriList = uris
+                    val intent = Intent(this, TvSettings::class.java)
+                    intent.putExtra("REQUIRE_PASSWORD", false)
+                    finish()
+                    startActivity(intent)
+                }
+                return true
+            }
+            4->{
+                val intent = Intent(this, TvSettings::class.java)
+                intent.putExtra("REQUIRE_PASSWORD", false)
+                finish()
+                startActivity(intent)
                 return true
             }
             else -> {
@@ -110,12 +143,44 @@ class FileExplorerActivity: AppCompatActivity() {
         }
     }
 
+    private fun getUris(file: File): MutableList<Uri> {
+        val itemList = mutableListOf<FileItem>()
+        if(file.listFiles()!=null){
+            file.listFiles()!!.forEach {
+                if(mediaType == "PHOTO"){
+                    if(!it.isHidden && (isImage(it))){
+                        itemList.add(FileItem(it, it.name))
+                    }
+                }
+                else if(mediaType == "VIDEO"){
+                    if(!it.isHidden && (isImage(it))){
+                        itemList.add(FileItem(it, it.name))
+                    }
+                }
+            }
+        }
+        itemList.sortBy{ it.file.name }
+
+        val uris = mutableListOf<Uri>()
+        itemList.forEach{
+           uris.add(Uri.parse(it.file.absolutePath))
+        }
+        return uris
+    }
+
     private fun getFiles(file: File): MutableList<FileItem>{
         val itemList = mutableListOf<FileItem>()
         if(file.listFiles()!=null){
             file.listFiles()!!.forEach {
-                if(!it.isHidden){
-                    itemList.add(FileItem(it, it.name))
+                if(mediaType == "PHOTO"){
+                    if(!it.isHidden && (it.isDirectory || isImage(it))){
+                        itemList.add(FileItem(it, it.name))
+                    }
+                }
+                else if(mediaType == "VIDEO"){
+                    if(!it.isHidden && (it.isDirectory || isVideo(it))){
+                        itemList.add(FileItem(it, it.name))
+                    }
                 }
             }
         }
@@ -123,6 +188,7 @@ class FileExplorerActivity: AppCompatActivity() {
         if(currentFile.absolutePath!=System.getenv("EXTERNAL_STORAGE")){
             itemList.add(0, FileItem(previousFile, "/.."))
         }
+        itemList.add(0, FileItem(File(".pick"), "pick folder"))
         itemList[0].selected = true
         return itemList
     }
@@ -146,5 +212,42 @@ class FileExplorerActivity: AppCompatActivity() {
             val itemAdapter = DirectoryAdapter(dataset)
             binding.fileRecyclerView.adapter = itemAdapter
         }
+    }
+
+    private fun isImage(file: File): Boolean {
+        if(file.absolutePath.endsWith(".jpg")){
+            return true
+        }
+        else if(file.absolutePath.endsWith(".jpeg")){
+            return true
+        }
+        else if(file.absolutePath.endsWith(".png")){
+            return true
+        }
+        else if(file.absolutePath.endsWith(".webp")){
+            return true
+        }
+        return false
+    }
+
+    private fun isVideo(file: File): Boolean {
+        if(file.absolutePath.endsWith(".mp4")){
+            return true
+        }
+        else if(file.absolutePath.endsWith(".mkv")){
+            return true
+        }
+        else if(file.absolutePath.endsWith(".webm")){
+            return true
+        }
+        return false
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, TvSettings::class.java)
+        intent.putExtra("REQUIRE_PASSWORD", false)
+        finish()
+        startActivity(intent)
     }
 }

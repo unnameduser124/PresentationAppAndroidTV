@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -79,12 +80,24 @@
         android:layout_margin="10dp"
         android:visibility="gone"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id = "@+id/photos_picked_folder_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pick_photos_button"
+        android:layout_margin="10dp"
+        tools:text = "/sdcard/Downloads"
+        android:textSize = "25sp"
+        android:textColor = "@color/black"
+        android:focusable="false"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:id = "@+id/photo_display_time_input_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pick_photos_button"
+        app:layout_constraintTop_toBottomOf="@id/photos_picked_folder_text_view"
         android:visibility="gone"
         android:layout_margin="10dp">
         <com.google.android.material.textfield.TextInputEditText

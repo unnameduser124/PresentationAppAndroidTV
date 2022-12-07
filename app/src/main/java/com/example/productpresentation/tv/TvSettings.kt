@@ -16,17 +16,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import com.example.productpresentation.admin
-import com.example.productpresentation.configurationLocked
+import com.example.productpresentation.*
 import com.example.productpresentation.database.ConfigurationDBService
 import com.example.productpresentation.databinding.AdminPanelLockPopupBinding
 import com.example.productpresentation.databinding.AdminPasswordPopupBinding
 import com.example.productpresentation.databinding.ConfirmPopupBinding
 import com.example.productpresentation.databinding.TvSettingsLayoutBinding
 import com.example.productpresentation.fileExplorer.FileExplorerActivity
-import com.example.productpresentation.lockTimeStart
-import com.example.productpresentation.wrongPasswordCounter
 import java.util.*
 
 
@@ -58,14 +56,16 @@ class TvSettings: AppCompatActivity() {
             }
         }
         else{
-            binding.root.post{
-                passwordPopup()
+            val requirePassword = intent.getBooleanExtra("REQUIRE_PASSWORD", true)
+            if(requirePassword){
+                binding.root.post{
+                    passwordPopup()
+                }
             }
         }
 
         binding.sourceRadioGroup.setOnCheckedChangeListener { _, i ->
             if(i==binding.photoOption.id){
-                Toast.makeText(this, "photo", Toast.LENGTH_SHORT).show()
                 binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
                 binding.tvSettingsWebUrlEditTextLayout.isGone = true
                 binding.pickPhotosButton.isGone = false
@@ -74,9 +74,18 @@ class TvSettings: AppCompatActivity() {
                 binding.photoDisplayTimeInputLayout.isGone = false
                 binding.configurationCodeInputLayout.isGone = true
                 binding.confirmConfigurationCodeChangeButton.isGone = true
+                binding.photosPickedFolderTextView.isGone = false
+                if(uriList.isNotEmpty()){
+                    println(getUriLocation(uriList.first().path!!))
+                    binding.photosPickedFolderTextView.text = getUriLocation(uriList.first().path!!)
+                }
+                else{
+                    binding.photosPickedFolderTextView.isGone = true
+                }
                 admin.mediaType = MediaType.Photos
             }
             if(i==binding.videoOption.id){
+                binding.photosPickedFolderTextView.isGone = true
                 binding.tvSettingsVideoFromUrlEditTextLayout.isGone = false
                 binding.tvSettingsWebUrlEditTextLayout.isGone = true
                 binding.pickPhotosButton.isGone = true
@@ -88,6 +97,7 @@ class TvSettings: AppCompatActivity() {
                 admin.mediaType = MediaType.Video
             }
             if(i==binding.webPageOption.id){
+                binding.photosPickedFolderTextView.isGone = true
                 binding.tvSettingsWebUrlEditTextLayout.isGone = false
                 binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
                 binding.pickPhotosButton.isGone = true
@@ -99,6 +109,7 @@ class TvSettings: AppCompatActivity() {
                 admin.mediaType = MediaType.WebPage
             }
             if(i==binding.adminSettings.id){
+                binding.photosPickedFolderTextView.isGone = true
                 binding.tvSettingsWebUrlEditTextLayout.isGone = true
                 binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
                 binding.pickPhotosButton.isGone = true
@@ -114,6 +125,7 @@ class TvSettings: AppCompatActivity() {
 
         binding.pickPhotosButton.setOnClickListener{
             val intent = Intent(this, FileExplorerActivity::class.java)
+            intent.putExtra("MEDIA_TYPE", "PHOTO")
             startActivity(intent)
         }
 
@@ -149,6 +161,14 @@ class TvSettings: AppCompatActivity() {
 
     }
 
+    private fun getUriLocation(path: String): String{
+        for(i in path.length-1 downTo 0){
+            if(path[i]=='/'){
+                return path.substring(0, i)
+            }
+        }
+        return System.getenv("EXTERNAL_STORAGE") as String;
+    }
 
     private fun setupViewsOnStart(){
         when (admin.mediaType) {
