@@ -15,6 +15,7 @@ import com.example.productpresentation.CustomChromeWebViewClient
 import com.example.productpresentation.CustomWebViewClient
 import com.example.productpresentation.admin
 import com.example.productpresentation.database.ConfigurationDBService
+import com.example.productpresentation.database.UriDBService
 import com.example.productpresentation.databinding.TvMainActivityBinding
 import com.example.productpresentation.tv.TvSettings.MediaTypeSettings.uri
 import com.example.productpresentation.uriList
@@ -36,10 +37,11 @@ class TvActivity: AppCompatActivity() {
         binding = TvMainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         requestStoragePermission()
+        ConfigurationDBService(this).getConfiguration()
+        uriList = UriDBService(this).getAllUris().toMutableList()
         showViews()
         playMedia()
         requestTextInputFocus()
-        ConfigurationDBService(this).getConfiguration()
 
 
         //hide text view to write admin code into
@@ -90,7 +92,6 @@ class TvActivity: AppCompatActivity() {
     //    //)
     //}
     private fun playVideo(videoSource: Uri) {
-        if(TvSettings.uriInitialized()){
             player = ExoPlayer.Builder(this).build()
             binding.tvActivityVideoPlayer.player = player
             binding.tvActivityVideoPlayer.keepScreenOn = true
@@ -100,7 +101,6 @@ class TvActivity: AppCompatActivity() {
             player.repeatMode = ExoPlayer.REPEAT_MODE_ONE
             player.prepare()
             player.play()
-        }
     }
 
     private fun stopVideo() {
@@ -166,11 +166,11 @@ class TvActivity: AppCompatActivity() {
             override fun run(){
                 try {
                     if (index < uriList.size) {
-                        setImage(uriList[index])
+                        setImage(uriList[index].getUri())
                         index++
                     } else {
                         index = 0
-                        setImage(uriList[index])
+                        setImage(uriList[index].getUri())
                     }
                 } catch (exception: UninitializedPropertyAccessException) {
                     shuffling = false
@@ -191,7 +191,9 @@ class TvActivity: AppCompatActivity() {
             }
         }
         else if(admin.mediaType == MediaType.Video){
-            playVideo(uri)
+            if(uriList.firstOrNull()!=null){
+                playVideo(uriList.first().getUri())
+            }
         }
         else if(admin.mediaType == MediaType.WebPage){
             val webViewClient = CustomWebViewClient(TvSettings.webPageLink)

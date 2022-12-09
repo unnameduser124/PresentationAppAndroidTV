@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.productpresentation.database.UriDBService
 import com.example.productpresentation.databinding.FileExplorerLayoutBinding
+import com.example.productpresentation.tv.MediaUri
 import com.example.productpresentation.tv.TvSettings
 import com.example.productpresentation.uriList
 import java.io.File
@@ -106,7 +108,10 @@ class FileExplorerActivity: AppCompatActivity() {
                 else{
                     val uris = getUris(currentFile)
                     uriList.clear()
-                    uriList = uris
+                    val dbService = UriDBService(this)
+                    dbService.clearTable()
+                    dbService.addUriList(uris)
+                    uriList = dbService.getAllUris().toMutableList()
                     val intent = Intent(this, TvSettings::class.java)
                     intent.putExtra("REQUIRE_PASSWORD", false)
                     finish()
@@ -121,7 +126,10 @@ class FileExplorerActivity: AppCompatActivity() {
                 else{
                     val uris = getUris(currentFile)
                     uriList.clear()
-                    uriList = uris
+                    val dbService = UriDBService(this)
+                    dbService.clearTable()
+                    dbService.addUriList(uris)
+                    uriList = dbService.getAllUris().toMutableList()
                     val intent = Intent(this, TvSettings::class.java)
                     intent.putExtra("REQUIRE_PASSWORD", false)
                     finish()
@@ -143,7 +151,7 @@ class FileExplorerActivity: AppCompatActivity() {
         }
     }
 
-    private fun getUris(file: File): MutableList<Uri> {
+    private fun getUris(file: File): MutableList<MediaUri> {
         val itemList = mutableListOf<FileItem>()
         if(file.listFiles()!=null){
             file.listFiles()!!.forEach {
@@ -161,9 +169,9 @@ class FileExplorerActivity: AppCompatActivity() {
         }
         itemList.sortBy{ it.file.name }
 
-        val uris = mutableListOf<Uri>()
+        val uris = mutableListOf<MediaUri>()
         itemList.forEach{
-           uris.add(Uri.parse(it.file.absolutePath))
+           uris.add(MediaUri(0, it.file.absolutePath))
         }
         return uris
     }
