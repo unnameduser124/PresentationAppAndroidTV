@@ -1,7 +1,7 @@
 package com.example.productpresentation.tv
 
 
-data class AdminConfig(var accessCode: String, var password: String, var mediaType: MediaType, var photoDisplayTime: Int, var lockStartTime: Long)
+data class AdminConfig(var accessCode: String, var password: String, var mediaType: MediaType, var photoDisplayTime: Int, var lockStartTime: Long, var fillScreen: Boolean)
 
 enum class MediaType{
     Photos,

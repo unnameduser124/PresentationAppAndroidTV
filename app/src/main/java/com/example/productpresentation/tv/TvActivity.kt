@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.InputType
 import android.view.KeyEvent
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
@@ -17,7 +18,6 @@ import com.example.productpresentation.admin
 import com.example.productpresentation.database.ConfigurationDBService
 import com.example.productpresentation.database.UriDBService
 import com.example.productpresentation.databinding.TvMainActivityBinding
-import com.example.productpresentation.tv.TvSettings.MediaTypeSettings.uri
 import com.example.productpresentation.uriList
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -40,6 +40,7 @@ class TvActivity: AppCompatActivity() {
         ConfigurationDBService(this).getConfiguration()
         uriList = UriDBService(this).getAllUris().toMutableList()
         showViews()
+        fillScreenWithImage()
         playMedia()
         requestTextInputFocus()
 
@@ -73,24 +74,15 @@ class TvActivity: AppCompatActivity() {
                 handler.post(runnable)
             }
         }
+
     }
-    //fun makePreferred(c: Context) {
-    //    val p: PackageManager = c.packageManager
-    //    val cN = ComponentName(c, TvActivity::class.java)
-    //    p.setComponentEnabledSetting(
-    //        cN,
-    //        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-    //        PackageManager.DONT_KILL_APP
-    //    )
-    //    val selector = Intent(Intent.ACTION_MAIN)
-    //    selector.addCategory(Intent.CATEGORY_HOME)
-    //    c.startActivity(selector)
-    //    //p.setComponentEnabledSetting(
-    //    //    cN,
-    //    //    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-    //    //    PackageManager.DONT_KILL_APP
-    //    //)
-    //}
+
+    private fun fillScreenWithImage(){
+        if(admin.fillScreen){
+            binding.tvActivityImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        }
+    }
+
     private fun playVideo(videoSource: Uri) {
             player = ExoPlayer.Builder(this).build()
             binding.tvActivityVideoPlayer.player = player
@@ -177,7 +169,7 @@ class TvActivity: AppCompatActivity() {
                     println(exception.message)
                 }
                 if(shuffling){
-                    handler.postDelayed(this, 1000)
+                    handler.postDelayed(this, admin.photoDisplayTime*1000L)
                 }
             }
         }

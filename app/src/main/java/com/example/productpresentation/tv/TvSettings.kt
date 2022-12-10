@@ -50,6 +50,8 @@ class TvSettings: AppCompatActivity() {
         binding = TvSettingsLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.fillScreenSwitch.isChecked = admin.fillScreen
+
         if(configurationLocked){
             binding.root.post{
                 lockedOutPopup()
@@ -65,59 +67,19 @@ class TvSettings: AppCompatActivity() {
         }
 
         binding.sourceRadioGroup.setOnCheckedChangeListener { _, i ->
-            if(i==binding.photoOption.id){
-                binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
-                binding.tvSettingsWebUrlEditTextLayout.isGone = true
-                binding.pickPhotosButton.isGone = false
-                binding.passwordChangeInputLayout.isGone = true
-                binding.confirmPasswordChangeButton.isGone = true
-                binding.photoDisplayTimeInputLayout.isGone = false
-                binding.configurationCodeInputLayout.isGone = true
-                binding.confirmConfigurationCodeChangeButton.isGone = true
-                binding.photosPickedFolderTextView.isGone = false
-                if(uriList.isNotEmpty()){
-                    println(getUriLocation(uriList.first().path!!))
-                    binding.photosPickedFolderTextView.text = getUriLocation(uriList.first().path!!)
+            when (i) {
+                binding.photoOption.id -> {
+                    photoOptionViewsVisibility()
                 }
-                else{
-                    binding.photosPickedFolderTextView.isGone = true
+                binding.videoOption.id -> {
+                    videoOptionViewsVisibility()
                 }
-                admin.mediaType = MediaType.Photos
-            }
-            if(i==binding.videoOption.id){
-                binding.photosPickedFolderTextView.isGone = true
-                binding.tvSettingsVideoFromUrlEditTextLayout.isGone = false
-                binding.tvSettingsWebUrlEditTextLayout.isGone = true
-                binding.pickPhotosButton.isGone = true
-                binding.passwordChangeInputLayout.isGone = true
-                binding.confirmPasswordChangeButton.isGone = true
-                binding.photoDisplayTimeInputLayout.isGone = true
-                binding.configurationCodeInputLayout.isGone = true
-                binding.confirmConfigurationCodeChangeButton.isGone = true
-                admin.mediaType = MediaType.Video
-            }
-            if(i==binding.webPageOption.id){
-                binding.photosPickedFolderTextView.isGone = true
-                binding.tvSettingsWebUrlEditTextLayout.isGone = false
-                binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
-                binding.pickPhotosButton.isGone = true
-                binding.passwordChangeInputLayout.isGone = true
-                binding.confirmPasswordChangeButton.isGone = true
-                binding.photoDisplayTimeInputLayout.isGone = true
-                binding.configurationCodeInputLayout.isGone = true
-                binding.confirmConfigurationCodeChangeButton.isGone = true
-                admin.mediaType = MediaType.WebPage
-            }
-            if(i==binding.adminSettings.id){
-                binding.photosPickedFolderTextView.isGone = true
-                binding.tvSettingsWebUrlEditTextLayout.isGone = true
-                binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
-                binding.pickPhotosButton.isGone = true
-                binding.passwordChangeInputLayout.isGone = false
-                binding.confirmPasswordChangeButton.isGone = false
-                binding.photoDisplayTimeInputLayout.isGone = true
-                binding.configurationCodeInputLayout.isGone = false
-                binding.confirmConfigurationCodeChangeButton.isGone = false
+                binding.webPageOption.id -> {
+                    webPageOptionViewsVisibility()
+                }
+                binding.adminSettings.id -> {
+                    adminConfigViewsVisibility()
+                }
             }
         }
 
@@ -134,7 +96,8 @@ class TvSettings: AppCompatActivity() {
         }
 
         binding.tvSettingsVideoFromUrlEditText.doOnTextChanged { text, start, before, count ->
-            uri = Uri.parse(text.toString())
+            uriList.clear()
+            uriList.add(MediaUri(-1, text.toString()))
         }
 
         binding.confirmPasswordChangeButton.setOnClickListener {
@@ -159,6 +122,79 @@ class TvSettings: AppCompatActivity() {
             }
         }
 
+        binding.photoDisplayTimeInput.doOnTextChanged { text, start, before, count ->
+            if(text.toString()!=""){
+                admin.photoDisplayTime = text.toString().toInt()
+            }
+        }
+
+        binding.fillScreenSwitch.setOnCheckedChangeListener { _, isChecked ->
+            admin.fillScreen = isChecked
+        }
+
+        binding.photoDisplayTimeInput.setText(admin.photoDisplayTime.toString())
+    }
+
+    private fun videoOptionViewsVisibility(){
+        binding.fillScreenSwitch.isGone = true
+        binding.photosPickedFolderTextView.isGone = true
+        binding.tvSettingsVideoFromUrlEditTextLayout.isGone = false
+        binding.tvSettingsWebUrlEditTextLayout.isGone = true
+        binding.pickPhotosButton.isGone = true
+        binding.passwordChangeInputLayout.isGone = true
+        binding.confirmPasswordChangeButton.isGone = true
+        binding.photoDisplayTimeInputLayout.isGone = true
+        binding.configurationCodeInputLayout.isGone = true
+        binding.confirmConfigurationCodeChangeButton.isGone = true
+        admin.mediaType = MediaType.Video
+    }
+
+    private fun webPageOptionViewsVisibility(){
+        binding.photosPickedFolderTextView.isGone = true
+        binding.fillScreenSwitch.isGone = true
+        binding.tvSettingsWebUrlEditTextLayout.isGone = false
+        binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
+        binding.pickPhotosButton.isGone = true
+        binding.passwordChangeInputLayout.isGone = true
+        binding.confirmPasswordChangeButton.isGone = true
+        binding.photoDisplayTimeInputLayout.isGone = true
+        binding.configurationCodeInputLayout.isGone = true
+        binding.confirmConfigurationCodeChangeButton.isGone = true
+        admin.mediaType = MediaType.WebPage
+    }
+
+    private fun adminConfigViewsVisibility(){
+        binding.fillScreenSwitch.isGone = true
+        binding.photosPickedFolderTextView.isGone = true
+        binding.tvSettingsWebUrlEditTextLayout.isGone = true
+        binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
+        binding.pickPhotosButton.isGone = true
+        binding.passwordChangeInputLayout.isGone = false
+        binding.confirmPasswordChangeButton.isGone = false
+        binding.photoDisplayTimeInputLayout.isGone = true
+        binding.configurationCodeInputLayout.isGone = false
+        binding.confirmConfigurationCodeChangeButton.isGone = false
+    }
+
+    private fun photoOptionViewsVisibility(){
+        binding.fillScreenSwitch.isGone = false
+        binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
+        binding.tvSettingsWebUrlEditTextLayout.isGone = true
+        binding.pickPhotosButton.isGone = false
+        binding.passwordChangeInputLayout.isGone = true
+        binding.confirmPasswordChangeButton.isGone = true
+        binding.photoDisplayTimeInputLayout.isGone = false
+        binding.configurationCodeInputLayout.isGone = true
+        binding.confirmConfigurationCodeChangeButton.isGone = true
+        binding.photosPickedFolderTextView.isGone = false
+        if(uriList.isNotEmpty()){
+            println(getUriLocation(uriList.first().path!!))
+            binding.photosPickedFolderTextView.text = getUriLocation(uriList.first().path!!)
+        }
+        else{
+            binding.photosPickedFolderTextView.isGone = true
+        }
+        admin.mediaType = MediaType.Photos
     }
 
     private fun getUriLocation(path: String): String{
@@ -271,12 +307,12 @@ class TvSettings: AppCompatActivity() {
 
         popupWindow.showAtLocation(binding.root, Gravity.CENTER, 0, 0)
 
-        popupBinding.lockedOutTime.text = "${formatTime(getTimeLeft())}"
+        popupBinding.lockedOutTime.text = formatTime(getTimeLeft())
 
         val handler = Handler(mainLooper)
         val runnable = object: Runnable{
             override fun run() {
-                popupBinding.lockedOutTime.text = "${formatTime(getTimeLeft())}"
+                popupBinding.lockedOutTime.text = formatTime(getTimeLeft())
                 if(getTimeLeft()<=0){
                     configurationLocked=false
                     popupWindow.dismiss()
@@ -325,18 +361,11 @@ class TvSettings: AppCompatActivity() {
 
     private fun onExit(){
         webPageLink = binding.tvSettingsWebUrlEditText.text.toString()
-        uri = Uri.parse(binding.tvSettingsVideoFromUrlEditText.text.toString())
         ConfigurationDBService(this).updateConfiguration(admin)
     }
 
     companion object MediaTypeSettings{
-        var photoUris = mutableListOf<Uri>()
         var webPageLink = ""
-        lateinit var uri: Uri
-        var photoDisplayTimeSeconds = 30
-        fun uriInitialized(): Boolean {
-            return this::uri.isInitialized
-        }
     }
 
     override fun onBackPressed() {

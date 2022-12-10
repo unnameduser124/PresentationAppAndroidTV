@@ -105,8 +105,19 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:id = "@+id/photo_display_time_input"
+            android:inputType="number"
             android:hint = "@string/display_time_input_hint"/>
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id = "@+id/fill_screen_switch"
+        tools:text = "fill screen"
+        app:layout_constraintTop_toBottomOf="@id/photo_display_time_input_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="10dp"
+        android:textSize="25sp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="300dp"

@@ -4,7 +4,7 @@ import android.provider.BaseColumns
 
 object DatabaseConstants {
 
-    const val DATABASE_NAME = "ConfigurationDatabase"
+    const val DATABASE_NAME = "ConfigurationDatabase.db"
     const val DATABASE_VERSION = 1
 
     const val CREATE_CONFIGURATION_TABLE = "CREATE TABLE ${ConfigurationTable.TABLE_NAME} (" +
@@ -12,6 +12,7 @@ object DatabaseConstants {
             "${ConfigurationTable.CONFIGURATION_CODE} TEXT NOT NULL," +
             "${ConfigurationTable.PHOTO_DISPLAY_TIME} INTEGER," +
             "${ConfigurationTable.SAVED_MEDIA_TYPE} TEXT NOT NULL," +
+            "${ConfigurationTable.FILL_SCREEN} INTEGER NOT NULL," +
             "${ConfigurationTable.LOCK_START_TIME} INTEGER)"
 
     const val CREATE_URI_TABLE = "CREATE TABLE ${URITable.TABLE_NAME} (" +
@@ -25,6 +26,7 @@ object DatabaseConstants {
         const val PHOTO_DISPLAY_TIME = "photoDisplayTime"
         const val SAVED_MEDIA_TYPE = "savedMediaType"
         const val LOCK_START_TIME = "lockStartTime"
+        const val FILL_SCREEN = "fillScreen"
     }
 
     object URITable: BaseColumns{
