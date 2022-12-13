@@ -136,57 +136,34 @@ class TvSettings: AppCompatActivity() {
     }
 
     private fun videoOptionViewsVisibility(){
-        binding.fillScreenSwitch.isGone = true
-        binding.photosPickedFolderTextView.isGone = true
-        binding.tvSettingsVideoFromUrlEditTextLayout.isGone = false
-        binding.tvSettingsWebUrlEditTextLayout.isGone = true
-        binding.pickPhotosButton.isGone = true
-        binding.passwordChangeInputLayout.isGone = true
-        binding.confirmPasswordChangeButton.isGone = true
-        binding.photoDisplayTimeInputLayout.isGone = true
-        binding.configurationCodeInputLayout.isGone = true
-        binding.confirmConfigurationCodeChangeButton.isGone = true
+        binding.videoElementsGroup.isGone = false
+        binding.configElementsGroup.isGone = true
+        binding.webElementsGroup.isGone = true
+        binding.photoElementsGroup.isGone = true
         admin.mediaType = MediaType.Video
     }
 
     private fun webPageOptionViewsVisibility(){
-        binding.photosPickedFolderTextView.isGone = true
-        binding.fillScreenSwitch.isGone = true
-        binding.tvSettingsWebUrlEditTextLayout.isGone = false
-        binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
-        binding.pickPhotosButton.isGone = true
-        binding.passwordChangeInputLayout.isGone = true
-        binding.confirmPasswordChangeButton.isGone = true
-        binding.photoDisplayTimeInputLayout.isGone = true
-        binding.configurationCodeInputLayout.isGone = true
-        binding.confirmConfigurationCodeChangeButton.isGone = true
+        binding.videoElementsGroup.isGone = true
+        binding.configElementsGroup.isGone = true
+        binding.webElementsGroup.isGone = false
+        binding.photoElementsGroup.isGone = true
         admin.mediaType = MediaType.WebPage
     }
 
     private fun adminConfigViewsVisibility(){
-        binding.fillScreenSwitch.isGone = true
-        binding.photosPickedFolderTextView.isGone = true
-        binding.tvSettingsWebUrlEditTextLayout.isGone = true
-        binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
-        binding.pickPhotosButton.isGone = true
-        binding.passwordChangeInputLayout.isGone = false
-        binding.confirmPasswordChangeButton.isGone = false
-        binding.photoDisplayTimeInputLayout.isGone = true
-        binding.configurationCodeInputLayout.isGone = false
-        binding.confirmConfigurationCodeChangeButton.isGone = false
+        binding.videoElementsGroup.isGone = true
+        binding.configElementsGroup.isGone = false
+        binding.webElementsGroup.isGone = true
+        binding.photoElementsGroup.isGone = true
     }
 
     private fun photoOptionViewsVisibility(){
-        binding.fillScreenSwitch.isGone = false
-        binding.tvSettingsVideoFromUrlEditTextLayout.isGone = true
-        binding.tvSettingsWebUrlEditTextLayout.isGone = true
-        binding.pickPhotosButton.isGone = false
-        binding.passwordChangeInputLayout.isGone = true
-        binding.confirmPasswordChangeButton.isGone = true
-        binding.photoDisplayTimeInputLayout.isGone = false
-        binding.configurationCodeInputLayout.isGone = true
-        binding.confirmConfigurationCodeChangeButton.isGone = true
-        binding.photosPickedFolderTextView.isGone = false
+        binding.videoElementsGroup.isGone = true
+        binding.configElementsGroup.isGone = true
+        binding.webElementsGroup.isGone = true
+        binding.photoElementsGroup.isGone = false
+
         if(uriList.isNotEmpty()){
             println(getUriLocation(uriList.first().path!!))
             binding.photosPickedFolderTextView.text = getUriLocation(uriList.first().path!!)

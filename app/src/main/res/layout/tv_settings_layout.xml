@@ -37,6 +37,13 @@
             android:text = "@string/settings_radio_button_label"/>
     </RadioGroup>
 
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id = "@+id/video_elements_group"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_settings_video_from_url_edit_text_layout"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -54,21 +61,12 @@
             android:hint="@string/your_video_url_edit_text_hint"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="300dp"
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/photo_elements_group"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id = "@+id/tv_settings_web_url_edit_text_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/source_radio_group"
         android:visibility="gone"
-        android:layout_margin="10dp">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id = "@+id/tv_settings_web_url_edit_text"
-            android:singleLine="true"
-            android:hint="@string/your_web_page_url_edit_text_hint"/>
-    </com.google.android.material.textfield.TextInputLayout>
+        app:constraint_referenced_ids="pick_photos_button, photos_picked_folder_text_view, photo_display_time_input_layout, fill_screen_switch" />
 
     <Button
         android:layout_width="wrap_content"
@@ -118,6 +116,36 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="10dp"
         android:textSize="25sp"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id = "@+id/web_elements_group"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_settings_web_url_edit_text_layout" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:id = "@+id/tv_settings_web_url_edit_text_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/source_radio_group"
+        android:visibility="gone"
+        android:layout_margin="10dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id = "@+id/tv_settings_web_url_edit_text"
+            android:singleLine="true"
+            android:hint="@string/your_web_page_url_edit_text_hint"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id = "@+id/config_elements_group"
+        android:visibility="gone"
+        app:constraint_referenced_ids="password_change_input_layout, configuration_code_input_layout, confirm_configuration_code_change_button, confirm_password_change_button"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="300dp"
