@@ -10,7 +10,7 @@
     <string name="web_page_radio_button_label">web page</string>
     <string name="video_radio_button_label">video</string>
     <string name="images_radio_button_label">images</string>
-    <string name="your_video_url_edit_text_hint">your video url</string>
+    <string name="your_video_url_edit_text_hint">your video path</string>
     <string name="your_web_page_url_edit_text_hint">your web page url</string>
     <string name="pick_images_button_label">pick images</string>
     <string name="password_input_hint">password</string>
@@ -22,4 +22,6 @@
     <string name="locked_out_time_label">10 min 0 s</string>
     <string name="display_time_input_hint">display time</string>
     <string name="new_configuration_code_input_hint">new configuration code</string>
+    <string name="pick_video_button_text">pick video</string>
+    <string name="fill_screen_switch_text">fill screen</string>
 </resources>

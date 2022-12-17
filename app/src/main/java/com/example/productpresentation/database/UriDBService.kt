@@ -20,6 +20,16 @@ class UriDBService(context: Context): ConfigurationDatabase(context) {
         db.insert(TABLE_NAME, null, contentValues)
     }
 
+    fun addWebPageUri(text: String){
+        val db = this.writableDatabase
+
+        val contentValues = ContentValues().apply{
+            put(URI_VALUE, text)
+        }
+
+        db.insert(TABLE_NAME, null, contentValues)
+    }
+
     fun addUriList(uriList: List<MediaUri>){
         val db = this.writableDatabase
         db.beginTransaction();
@@ -94,8 +104,9 @@ class UriDBService(context: Context): ConfigurationDatabase(context) {
             while(cursor.moveToNext()){
                 val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
                 val path = getString(getColumnIndexOrThrow(URI_VALUE))
-                println(path)
-                uriList.add(MediaUri(id, path))
+                if(path!=null){
+                    uriList.add(MediaUri(id, path))
+                }
             }
         }
 

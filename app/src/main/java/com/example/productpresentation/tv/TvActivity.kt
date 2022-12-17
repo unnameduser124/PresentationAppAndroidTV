@@ -21,6 +21,7 @@ import com.example.productpresentation.databinding.TvMainActivityBinding
 import com.example.productpresentation.uriList
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import java.util.*
 
 
@@ -40,7 +41,7 @@ class TvActivity: AppCompatActivity() {
         ConfigurationDBService(this).getConfiguration()
         uriList = UriDBService(this).getAllUris().toMutableList()
         showViews()
-        fillScreenWithImage()
+        fillScreenWithContent()
         playMedia()
         requestTextInputFocus()
 
@@ -77,9 +78,10 @@ class TvActivity: AppCompatActivity() {
 
     }
 
-    private fun fillScreenWithImage(){
+    private fun fillScreenWithContent(){
         if(admin.fillScreen){
             binding.tvActivityImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+            binding.tvActivityVideoPlayer.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
         }
     }
 
@@ -188,11 +190,13 @@ class TvActivity: AppCompatActivity() {
             }
         }
         else if(admin.mediaType == MediaType.WebPage){
-            val webViewClient = CustomWebViewClient(TvSettings.webPageLink)
-            binding.tvActivityWebView.webViewClient  = webViewClient
-            val webChromeClient =  CustomChromeWebViewClient(TvSettings.webPageLink)
-            binding.tvActivityWebView.webChromeClient = webChromeClient
-            binding.tvActivityWebView.loadUrl(TvSettings.webPageLink)
+            if(uriList.isNotEmpty()){
+                val webViewClient = CustomWebViewClient(uriList.first().path)
+                binding.tvActivityWebView.webViewClient  = webViewClient
+                val webChromeClient =  CustomChromeWebViewClient(TvSettings.webPageLink)
+                binding.tvActivityWebView.webChromeClient = webChromeClient
+                binding.tvActivityWebView.loadUrl(TvSettings.webPageLink)
+            }
         }
     }
 

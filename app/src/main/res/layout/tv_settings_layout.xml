@@ -42,14 +42,24 @@
         android:layout_height="wrap_content"
         android:id = "@+id/video_elements_group"
         android:visibility="gone"
-        app:constraint_referenced_ids="tv_settings_video_from_url_edit_text_layout"/>
+        app:constraint_referenced_ids="tv_settings_video_from_url_edit_text_layout, pick_video_button, fill_screen_switch_video"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id = "@+id/pick_video_button"
+        app:layout_constraintTop_toBottomOf="@id/source_radio_group"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text = "@string/pick_video_button_text"
+        android:layout_margin="10dp"
+        android:visibility="gone"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:id = "@+id/tv_settings_video_from_url_edit_text_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/source_radio_group"
+        app:layout_constraintTop_toBottomOf="@id/pick_video_button"
         android:visibility="gone"
         android:layout_margin="10dp">
         <com.google.android.material.textfield.TextInputEditText
@@ -60,6 +70,16 @@
             android:text = "@string/url_input_hint"
             android:hint="@string/your_video_url_edit_text_hint"/>
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id = "@+id/fill_screen_switch_video"
+        android:text = "@string/fill_screen_switch_text"
+        app:layout_constraintTop_toBottomOf="@id/tv_settings_video_from_url_edit_text_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="10dp"
+        android:textSize="25sp"/>
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/photo_elements_group"
@@ -111,7 +131,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id = "@+id/fill_screen_switch"
-        tools:text = "fill screen"
+        android:text = "@string/fill_screen_switch_text"
         app:layout_constraintTop_toBottomOf="@id/photo_display_time_input_layout"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="10dp"
