@@ -11,3 +11,4 @@ var configurationLocked = false
 var wrongPasswordCounter = 0
 var lockTimeStart = Calendar.getInstance().timeInMillis
 var uriList = mutableListOf<MediaUri>()
+var firstStart = false

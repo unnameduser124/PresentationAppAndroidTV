@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ProductPresentation</string>
+    <string name="app_name">BackgroundPlayer</string>
     <string name="video_button_label">video</string>
     <string name="web_page_button_label">web page</string>
     <string name="pick_button_label">pick file</string>
@@ -24,4 +24,6 @@
     <string name="new_configuration_code_input_hint">new configuration code</string>
     <string name="pick_video_button_text">pick video</string>
     <string name="fill_screen_switch_text">fill screen</string>
+    <string name="new_code_hint">new code</string>
+    <string name="new_password_hint">new password</string>
 </resources>

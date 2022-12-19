@@ -12,13 +12,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
-import com.example.productpresentation.CustomChromeWebViewClient
-import com.example.productpresentation.CustomWebViewClient
-import com.example.productpresentation.admin
+import com.example.productpresentation.*
 import com.example.productpresentation.database.ConfigurationDBService
 import com.example.productpresentation.database.UriDBService
 import com.example.productpresentation.databinding.TvMainActivityBinding
-import com.example.productpresentation.uriList
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
@@ -40,6 +37,11 @@ class TvActivity: AppCompatActivity() {
         requestStoragePermission()
         ConfigurationDBService(this).getConfiguration()
         uriList = UriDBService(this).getAllUris().toMutableList()
+        if(firstStart){
+            val intent = Intent(this, FirstConfig::class.java)
+            startActivity(intent)
+            finish()
+        }
         showViews()
         fillScreenWithContent()
         playMedia()
@@ -47,10 +49,13 @@ class TvActivity: AppCompatActivity() {
 
 
         //hide text view to write admin code into
-        binding.tvActivityAdminCodeInput.showSoftInputOnFocus = false
-        binding.tvActivityAdminCodeInput.requestFocus()
-        //disable soft input keyboard
-        binding.tvActivityAdminCodeInput.inputType = InputType.TYPE_NULL
+        binding.tvActivityAdminCodeInput.apply {
+            showSoftInputOnFocus = false
+            requestFocus()
+            // disable soft input keyboard
+            inputType = InputType.TYPE_NULL
+        }
+
 
         binding.tvActivityAdminCodeInput.addTextChangedListener {
             lastInputTime = Calendar.getInstance().timeInMillis
@@ -107,30 +112,30 @@ class TvActivity: AppCompatActivity() {
 
     //register remote key presses, maybe enable admin access after certain remote key press combination?
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        when (keyCode) {
+        return when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
                 Toast.makeText(this, "dpadup", Toast.LENGTH_SHORT).show()
-                return true
+                true
             }
             KeyEvent.KEYCODE_DPAD_DOWN -> {
                 Toast.makeText(this, "dpaddown", Toast.LENGTH_SHORT).show()
-                return true
+                true
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 Toast.makeText(this, "dpadright", Toast.LENGTH_SHORT).show()
-                return true
+                true
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 Toast.makeText(this, "dpadleft", Toast.LENGTH_SHORT).show()
-                return true
+                true
             }
             KeyEvent.KEYCODE_DPAD_CENTER -> {
                 //for some reason doesn't register center button click
                 Toast.makeText(this, "dpadcenter", Toast.LENGTH_SHORT).show()
-                return true
+                true
             }
             else -> {
-                return false
+                false
             }
         }
     }

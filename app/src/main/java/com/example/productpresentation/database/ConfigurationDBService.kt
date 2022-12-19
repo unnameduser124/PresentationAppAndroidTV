@@ -16,7 +16,6 @@ import com.example.productpresentation.tv.getMediaType
 
 class ConfigurationDBService(val context: Context): ConfigurationDatabase(context) {
     fun insertDefaultConfigurationRecord(db: SQLiteDatabase?){
-
         val contentValues = ContentValues().apply {
             put(PASSWORD, "password")
             put(CONFIGURATION_CODE, "code")
