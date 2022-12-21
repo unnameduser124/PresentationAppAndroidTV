@@ -40,6 +40,7 @@
             </intent-filter>
 
         </activity>
+
         <activity
             android:name=".tv.TvSettings"
             android:parentActivityName=".tv.TvActivity"

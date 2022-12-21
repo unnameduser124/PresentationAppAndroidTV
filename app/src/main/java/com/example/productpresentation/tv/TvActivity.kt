@@ -36,6 +36,9 @@ class TvActivity: AppCompatActivity() {
         setContentView(binding.root)
         requestStoragePermission()
         ConfigurationDBService(this).getConfiguration()
+        if(admin.accessCode==""){
+            firstStart = true
+        }
         uriList = UriDBService(this).getAllUris().toMutableList()
         if(firstStart){
             val intent = Intent(this, FirstConfig::class.java)
